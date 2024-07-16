@@ -15,7 +15,7 @@ import uk.co.callumbirks.CobbleEggs
 import uk.co.callumbirks.util.getBlocksTravelled
 import kotlin.math.max
 
-class IncubatingEgg(private val incubator: Incubator, private val egg: Egg): Item(Item.Settings().maxCount(1)) {
+class IncubatingEgg(private val incubator: Incubator, private val egg: Egg): Item(Settings().maxCount(1)) {
     companion object {
         const val UPDATE_RATE = 20 // Update nbt steps data every x ticks
         var tickCounter = UPDATE_RATE

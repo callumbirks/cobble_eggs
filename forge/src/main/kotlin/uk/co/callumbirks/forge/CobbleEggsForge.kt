@@ -8,7 +8,7 @@ import uk.co.callumbirks.CobbleEggs
 @Mod(CobbleEggs.MOD_ID)
 class CobbleEggsForge {
     init {
-        EventBuses.registerModEventBus(CobbleEggs.MOD_ID, FMLJavaModLoadingContext.get().modEventBus);
-        CobbleEggs.init(CobbleEggsForgeImplementation())
+        EventBuses.registerModEventBus(CobbleEggs.MOD_ID, FMLJavaModLoadingContext.get().modEventBus)
+        CobbleEggs.init()
     }
 }

@@ -13,19 +13,13 @@ object CobbleEggs {
     const val MOD_ID = "cobble_eggs"
     val LOGGER = LoggerFactory.getLogger(MOD_ID)
     val CONFIG = CobbleEggsConfig.load()
-    lateinit var implementation: CobbleEggsImplementation
 
-    fun init(implementation: CobbleEggsImplementation) {
+    fun init() {
         CobbleEggsItems.register()
-        this.implementation = implementation
     }
 
     fun cobbleEggsResource(name: String): Identifier {
         return Identifier(MOD_ID, name)
-    }
-
-    fun getPokemon(name: String): Pokemon {
-        return PokemonSpecies.random().create()
     }
 
     fun giveRandomPokemon(player: ServerPlayerEntity, rarity: Egg.Rarity): Boolean {

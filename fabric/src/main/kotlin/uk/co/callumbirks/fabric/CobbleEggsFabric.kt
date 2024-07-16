@@ -5,6 +5,6 @@ import uk.co.callumbirks.CobbleEggs
 
 class CobbleEggsFabric : ModInitializer {
     override fun onInitialize() {
-        CobbleEggs.init(CobbleEggsFabricImplementation())
+        CobbleEggs.init()
     }
 }
