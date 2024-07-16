@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "cobble_eggs:item/incubator_common",
+    "layer1": "cobble_eggs:item/egg_event"
+  }
+}
