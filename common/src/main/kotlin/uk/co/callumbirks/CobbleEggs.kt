@@ -1,21 +1,29 @@
 package uk.co.callumbirks
 
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
+import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 import org.slf4j.LoggerFactory
 import uk.co.callumbirks.config.CobbleEggsConfig
+import uk.co.callumbirks.config.LootConfig
+import uk.co.callumbirks.config.rollShiny
 import uk.co.callumbirks.item.Egg
 
 object CobbleEggs {
     const val MOD_ID = "cobble_eggs"
     val LOGGER = LoggerFactory.getLogger(MOD_ID)
     val CONFIG = CobbleEggsConfig.load()
+    val LOOT_CONFIG = LootConfig.load()
 
     fun init() {
         CobbleEggsItems.register()
+        CobbleEggsLoot.register()
+        CobbleEggsEvents.register()
+        CobbleEggsNetworking.registerServer()
     }
 
     fun cobbleEggsResource(name: String): Identifier {
@@ -37,13 +45,22 @@ object CobbleEggs {
         val config = CONFIG.configForRarity(rarity)
         val speciesString = config.pokemon.randomOrNull() ?: return null
         val (speciesId, aspects) = CobbleEggsConfig.speciesIdAndAspects(speciesString)
-        speciesId?.let { id ->
-            val species = PokemonSpecies.getByIdentifier(id) ?: return null
-            val pokemon = species.create(1)
-            pokemon.aspects = aspects
-            pokemon.updateForm()
-            return pokemon
+        if (speciesId == null) {
+            return null
         }
-        return null
+        val species = PokemonSpecies.getByIdentifier(speciesId) ?: return null
+        val pokemon = species.create(1)
+        if (CONFIG.settings.shinyRate > 0f) {
+            pokemon.shiny = CONFIG.settings.shinyRate.rollShiny()
+        }
+        pokemon.aspects = aspects
+        pokemon.updateForm()
+        if (CONFIG.settings.perfectIVs > 0) {
+            val ivs = IVs.createRandomIVs(CONFIG.settings.perfectIVs)
+            for (iv in ivs) {
+                pokemon.setIV(iv.key, iv.value)
+            }
+        }
+        return pokemon
     }
 }

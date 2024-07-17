@@ -10,7 +10,9 @@ import java.io.PrintWriter
 
 class CobbleEggsConfig {
     data class EggConfig(val blocksToHatch: Int, val pokemon: MutableSet<String>)
+    data class Settings(val shinyRate: Float, val perfectIVs: Int)
 
+    val settings = Settings(0f, 0)
     val commonEgg = EggConfig(1_000, mutableSetOf("bidoof", "zigzagoon galarian"))
     val rareEgg = EggConfig(5_000, mutableSetOf("golett"))
     val epicEgg = EggConfig(10_000, mutableSetOf("charcadet"))
@@ -30,9 +32,9 @@ class CobbleEggsConfig {
     companion object {
         fun speciesIdAndAspects(speciesString: String): Pair<Identifier?, Set<String>> {
             var aspects: Set<String> = setOf()
-            var firstWord: String? = speciesString
+            var firstWord: String? = speciesString.lowercase()
             if (speciesString.contains(' ')) {
-                var split = speciesString.split(' ')
+                var split = speciesString.lowercase().split(' ')
                 firstWord = split.firstOrNull()
                 split = split.drop(1)
                 aspects = split.toSet()

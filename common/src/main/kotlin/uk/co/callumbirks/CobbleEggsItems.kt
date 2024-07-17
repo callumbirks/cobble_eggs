@@ -11,6 +11,8 @@ import uk.co.callumbirks.item.Incubator
 
 object CobbleEggsItems {
     private val REGISTRY = DeferredRegister.create(CobbleEggs.MOD_ID, RegistryKeys.ITEM)
+    private val byIdentifier = hashMapOf<Identifier, Item>()
+    private val reverseMap = hashMapOf<Item, Identifier>()
 
     val EGG_COMMON    = register("egg_common")
         { Egg(Egg.Settings(CobbleEggs.CONFIG.commonEgg.blocksToHatch, Egg.Rarity.COMMON)) }
@@ -79,7 +81,18 @@ object CobbleEggsItems {
     private fun <T> register(name: String, supplier: () -> T) : T where T: Item {
         val item = supplier()
         REGISTRY.register(name) { item }
+        val identifier = cobbleEggsResource(name)
+        byIdentifier[identifier] = item
+        reverseMap[item] = identifier
         return item
+    }
+
+    fun byIdentifier(identifier: Identifier): Item? {
+        return byIdentifier[identifier]
+    }
+
+    fun getIdentifier(item: Item): Identifier? {
+        return reverseMap[item]
     }
 
     fun register() {
