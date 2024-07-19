@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "cobble_eggs:item/incubator_rare",
-    "layer1": "cobble_eggs:item/egg_common"
+    "layer0": "cobble_eggs:item/incubating_egg_rare_common"
   }
 }

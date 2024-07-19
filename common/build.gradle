@@ -13,3 +13,7 @@ dependencies {
 
     modImplementation "com.cobblemon:mod:$rootProject.cobblemon_version"
 }
+
+loom {
+    silentMojangMappingsLicense()
+}

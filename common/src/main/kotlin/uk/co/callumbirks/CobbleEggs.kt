@@ -3,7 +3,6 @@ package uk.co.callumbirks
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.pokemon.IVs
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
@@ -19,11 +18,23 @@ object CobbleEggs {
     val CONFIG = CobbleEggsConfig.load()
     val LOOT_CONFIG = LootConfig.load()
 
-    fun init() {
-        CobbleEggsItems.register()
+    lateinit var implementation: CobbleEggsImplementation
+
+    fun preInitialize(implementation: CobbleEggsImplementation) {
+        CobbleEggs.implementation = implementation
+
+        LOGGER.info("Initializing CobbleEggs ...")
+
+        implementation.registerItems()
+    }
+
+    fun initialize() {
         CobbleEggsLoot.register()
         CobbleEggsEvents.register()
-        CobbleEggsNetworking.registerServer()
+        when (implementation.environment()) {
+            Environment.CLIENT -> CobbleEggsNetworking.registerClient()
+            Environment.SERVER -> CobbleEggsNetworking.registerServer()
+        }
     }
 
     fun cobbleEggsResource(name: String): Identifier {
@@ -63,4 +74,5 @@ object CobbleEggs {
         }
         return pokemon
     }
+
 }

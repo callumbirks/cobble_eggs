@@ -1,5 +1,6 @@
 package uk.co.callumbirks.item
 
+import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -10,6 +11,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.world.World
 import uk.co.callumbirks.CobbleEggs
+import uk.co.callumbirks.CobbleEggsNetworking
 
 class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
     Item(Settings().maxCount(1).maxDamage(100)) {
@@ -31,14 +33,14 @@ class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
             return TypedActionResult.pass(stack)
         }
         return if (CobbleEggs.giveRandomPokemon(user, egg.rarity)) {
-            val uses = if (stack.nbt!!.contains("incubator_uses")) stack.nbt!!.getInt("incubator_uses") + 1 else 1
+            CobbleEggsNetworking.PlaySoundToClient.send(user, cobblemonResource("poke_ball.capture_succeeded"))
+            val uses =
+                if (stack.nbt!!.contains("incubator_uses")) stack.nbt!!.getInt("incubator_uses") + 1 else Incubator.MAX_USES
             if (uses == Incubator.MAX_USES) {
                 TypedActionResult.success(ItemStack.EMPTY)
             } else {
                 val usedIncubator = ItemStack(incubator)
-                val nbt = usedIncubator.orCreateNbt
-                nbt.putInt("incubator_uses", uses)
-                usedIncubator.damage = uses
+                usedIncubator.nbt!!.putInt("incubator_uses", uses)
                 TypedActionResult.success(usedIncubator)
             }
         } else {
@@ -56,7 +58,9 @@ class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
         stack.damage = 100 - progressPct
     }
 
-    fun updateNbtData(stack: ItemStack, blocksTravelled: Int) {
+    /// Update the steps/NBT data for this IncubatingEgg.
+    /// Returns TRUE if this IncubatingEgg just finished hatching, FALSE otherwise.
+    fun updateNbtSteps(stack: ItemStack, blocksTravelled: Int): Boolean {
         if (stack.nbt == null) {
             stack.nbt = NbtCompound()
         }
@@ -64,18 +68,20 @@ class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
             stack.nbt!!.putInt("steps_req", blocksTravelled + stepsRequired())
             stack.nbt!!.putBoolean("steps_done", false)
             stack.nbt!!.putInt("steps_progress", 0)
-            return
+            return false
         }
         val stepsDone = stack.nbt!!.getBoolean("steps_done")
         if (stepsDone) {
-            return
+            return false
         }
         val stepsReq = stack.nbt!!.getInt("steps_req")
         val stepsStart = stepsReq - stepsRequired()
         stack.nbt!!.putInt("steps_progress", blocksTravelled - stepsStart)
-        if (blocksTravelled > stepsReq) {
+        return if (blocksTravelled > stepsReq) {
             stack.nbt!!.putBoolean("steps_done", true)
-            // CobbleEggNetworking.playSoundToClient(entity, cobblemonResource("poke_ball.capture_started"), false)
+            true
+        } else {
+            false
         }
     }
 

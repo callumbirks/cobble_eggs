@@ -1,5 +1,6 @@
 package uk.co.callumbirks.item
 
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.StackReference
 import net.minecraft.item.Item
@@ -7,7 +8,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
 import net.minecraft.recipe.Ingredient
 import net.minecraft.screen.slot.Slot
+import net.minecraft.sound.SoundEvent
 import net.minecraft.util.ClickType
+import net.minecraft.world.World
 import uk.co.callumbirks.CobbleEggsItems
 
 class Incubator(settings: Settings) : Item(settings) {
@@ -21,32 +24,6 @@ class Incubator(settings: Settings) : Item(settings) {
     data class Settings(val rarity: Rarity, val stepsMultiplier: Float) : Item.Settings() {
         init {
             maxDamage(MAX_USES)
-        }
-    }
-
-    object IncubatorMaterial : ToolMaterial {
-        override fun getDurability(): Int {
-            return MAX_USES
-        }
-
-        override fun getMiningSpeedMultiplier(): Float {
-            return 0f
-        }
-
-        override fun getAttackDamage(): Float {
-            return 0f
-        }
-
-        override fun getMiningLevel(): Int {
-            return 0
-        }
-
-        override fun getEnchantability(): Int {
-            return 0
-        }
-
-        override fun getRepairIngredient(): Ingredient {
-            return Ingredient.EMPTY
         }
     }
 
@@ -83,5 +60,12 @@ class Incubator(settings: Settings) : Item(settings) {
         }
 
         return true
+    }
+
+    override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
+        if (stack == null) return
+        if (stack.nbt == null || !stack.nbt!!.contains("incubator_uses")) return
+        val uses = stack.nbt!!.getInt("incubator_uses")
+        stack.damage = uses
     }
 }

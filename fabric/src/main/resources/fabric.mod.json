@@ -16,15 +16,12 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "uk.co.callumbirks.fabric.CobbleEggsFabric"
+      "uk.co.callumbirks.fabric.FabricBootstrap"
     ],
     "client": [
       "uk.co.callumbirks.fabric.client.CobbleEggsFabricClient"
     ]
   },
-  "mixins": [
-    "cobble_eggs.mixins.json"
-  ],
   "depends": {
     "fabricloader": ">=0.15.11",
     "minecraft": "~1.20.1",
