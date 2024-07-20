@@ -49,7 +49,7 @@ class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
     }
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        if (stack == null) return
+        if (stack == null || world == null || world.isClient) return
         val nbt = stack.orCreateNbt
         if (!nbt.contains("steps_progress")) return
 
