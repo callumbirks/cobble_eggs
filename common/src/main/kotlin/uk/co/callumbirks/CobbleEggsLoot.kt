@@ -2,12 +2,13 @@ package uk.co.callumbirks
 
 import dev.architectury.event.events.common.LootEvent
 import net.minecraft.item.Item
+import net.minecraft.item.Items
 import net.minecraft.loot.LootManager
 import net.minecraft.loot.LootPool
 import net.minecraft.loot.entry.ItemEntry
 import net.minecraft.util.Identifier
 
-object CobbleEggsLoot: LootEvent.ModifyLootTable {
+object CobbleEggsLoot : LootEvent.ModifyLootTable {
     private var loot: HashMap<Identifier, ArrayList<LootEntry>> = hashMapOf()
 
     data class LootEntry(val item: Item, val weight: Int)
@@ -23,6 +24,13 @@ object CobbleEggsLoot: LootEvent.ModifyLootTable {
                 ?: throw IllegalArgumentException(String.format("No known egg with identifier '{}'"))
             registerLoot(entry.table(), item, entry.weight)
             CobbleEggs.LOGGER.debug("Registering loot item '{}' in table '{}'", entry.item, entry.table)
+        }
+        for (lootEntry in loot) {
+            val totalWeight =
+                lootEntry.value.stream().map { it.weight }.reduce(0) { total, weight -> total + weight }
+            if (totalWeight < 100) {
+                registerLoot(lootEntry.key, Items.AIR, 100 - totalWeight)
+            }
         }
         LootEvent.MODIFY_LOOT_TABLE.register(this)
         CobbleEggs.LOGGER.debug("Registered loot {}", loot)
