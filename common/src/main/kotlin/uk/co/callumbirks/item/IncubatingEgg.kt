@@ -60,12 +60,11 @@ class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
 
     /// Update the steps/NBT data for this IncubatingEgg.
     /// Returns TRUE if this IncubatingEgg just finished hatching, FALSE otherwise.
-    fun updateNbtSteps(stack: ItemStack, blocksTravelled: Int): Boolean {
+    fun addNbtSteps(stack: ItemStack, stepsDelta: Int): Boolean {
         if (stack.nbt == null) {
             stack.nbt = NbtCompound()
         }
         if (!stack.nbt!!.contains("steps_done")) {
-            stack.nbt!!.putInt("steps_req", blocksTravelled + stepsRequired())
             stack.nbt!!.putBoolean("steps_done", false)
             stack.nbt!!.putInt("steps_progress", 0)
             return false
@@ -74,10 +73,9 @@ class IncubatingEgg(private val incubator: Incubator, private val egg: Egg) :
         if (stepsDone) {
             return false
         }
-        val stepsReq = stack.nbt!!.getInt("steps_req")
-        val stepsStart = stepsReq - stepsRequired()
-        stack.nbt!!.putInt("steps_progress", blocksTravelled - stepsStart)
-        return if (blocksTravelled > stepsReq) {
+        val stepsProgress = stack.nbt!!.getInt("steps_progress")
+        stack.nbt!!.putInt("steps_progress", stepsProgress + stepsDelta)
+        return if (stepsProgress >= stepsRequired()) {
             stack.nbt!!.putBoolean("steps_done", true)
             true
         } else {

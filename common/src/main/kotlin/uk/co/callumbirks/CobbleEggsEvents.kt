@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import dev.architectury.event.events.common.TickEvent
 import net.minecraft.server.MinecraftServer
 import uk.co.callumbirks.item.IncubatingEgg
+import uk.co.callumbirks.util.Pedometer
 import uk.co.callumbirks.util.getBlocksTravelled
 
 
@@ -28,13 +29,13 @@ object CobbleEggsEvents : TickEvent.Server {
 
     private fun updateIncubatingEggs(instance: MinecraftServer) {
         for (player in instance.playerManager.playerList) {
+            val stepsDelta = Pedometer.getStepsDelta(player)
             var justHatched = false
-            val blocksTravelled = player.getBlocksTravelled()
             for (stack in player.inventory.main + player.inventory.offHand) {
                 if (stack.isEmpty || stack.item !is IncubatingEgg) {
                     continue
                 }
-                if ((stack.item as IncubatingEgg).updateNbtSteps(stack, blocksTravelled)) {
+                if ((stack.item as IncubatingEgg).addNbtSteps(stack, stepsDelta)) {
                     justHatched = true
                 }
             }
