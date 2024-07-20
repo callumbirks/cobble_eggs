@@ -1,7 +1,6 @@
 package uk.co.callumbirks
 
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.ibm.icu.text.DisplayContext
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemGroup.EntryCollector
 import net.minecraft.item.ItemStack

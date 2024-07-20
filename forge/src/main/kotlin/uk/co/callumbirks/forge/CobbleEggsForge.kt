@@ -1,18 +1,14 @@
 package uk.co.callumbirks.forge
 
-import dev.architectury.platform.forge.EventBuses
 import net.minecraft.item.ItemGroup
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.MinecraftServer
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.fml.DistExecutor
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent
 import net.minecraftforge.fml.loading.FMLEnvironment
 import net.minecraftforge.registries.RegisterEvent
 import net.minecraftforge.server.ServerLifecycleHooks
 import thedarkcolour.kotlinforforge.forge.MOD_BUS
-import thedarkcolour.kotlinforforge.forge.MOD_CONTEXT
 import uk.co.callumbirks.*
 
 @Mod(CobbleEggs.MOD_ID)

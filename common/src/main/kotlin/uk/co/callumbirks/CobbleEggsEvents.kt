@@ -5,8 +5,6 @@ import dev.architectury.event.events.common.TickEvent
 import net.minecraft.server.MinecraftServer
 import uk.co.callumbirks.item.IncubatingEgg
 import uk.co.callumbirks.util.Pedometer
-import uk.co.callumbirks.util.getBlocksTravelled
-
 
 object CobbleEggsEvents : TickEvent.Server {
     fun register() {

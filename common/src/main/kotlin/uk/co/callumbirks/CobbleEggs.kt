@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.party
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import uk.co.callumbirks.config.CobbleEggsConfig
 import uk.co.callumbirks.config.LootConfig
@@ -14,7 +15,7 @@ import uk.co.callumbirks.item.Egg
 
 object CobbleEggs {
     const val MOD_ID = "cobble_eggs"
-    val LOGGER = LoggerFactory.getLogger(MOD_ID)
+    val LOGGER: Logger = LoggerFactory.getLogger(MOD_ID)
     val CONFIG = CobbleEggsConfig.load()
     val LOOT_CONFIG = LootConfig.load()
 
