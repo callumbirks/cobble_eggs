@@ -2,9 +2,6 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "b": {
-      "item": "minecraft:iron_ingot"
-    },
     "g": {
       "item": "minecraft:glass_pane"
     },
@@ -13,9 +10,9 @@
     }
   },
   "pattern": [
-    "bbb",
+    "xxx",
     "gxg",
-    "bbb"
+    "xxx"
   ],
   "result": {
     "item": "cobble_eggs:incubator_common"
